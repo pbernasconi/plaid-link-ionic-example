@@ -21,12 +21,22 @@ angular.module('starter', ['ionic'])
   .controller('MainCtrl', function($scope) {
 
     var sandboxHandler = Plaid.create({
-      clientName: 'SUM',
-      env: 'tartan',
-      product: 'auth',
-      key: 'test_key',
-      onSuccess: function(token) {
-        window.location = '/accounts.html?public_token=' + token;
+      clientName: 'Plaid example',
+      env: 'sandbox',
+      product: ['auth'],
+      key: '[PLAID_PUBLIC_KEY]',
+      selectAccount: true,
+      forceIframe: true, // required
+      onSuccess: function(public_token, metadata) {
+        // send public_token to server to exchange for access_token
+        console.log(public_token, metadata);
+      },
+      onExit: function(error, metadata) {
+        if (error != null) {
+          // Plaid API error
+          console.log(error);
+        }
+        console.log(metadata);
       }
     });
 
